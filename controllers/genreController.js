@@ -110,9 +110,9 @@ exports.genre_delete_get = function(req, res, next) {
       },
 }, function(err, results) {
     if (err) {return next(err);}
-    if (results.genre==null) {res.redirect('/catalog/genre')}
+    if (results.genre==null) {res.redirect('catalog/genres')}
 
-res.render('genre_delete', {title: 'Delete Genre', genre: results.genre, books: results.books});
+res.render('genre_delete', {title: 'Delete Genre', genre: results.genre, book_genre: results.books});
     });
 };
 
@@ -133,12 +133,12 @@ exports.genre_delete_post = function(req, res, next) {
           return;
         }
         else {
-          Author.findByIdAndRemove(req.body.authorid, function deleteGenre(err){
+          Genre.findByIdAndRemove(req.body.genreid, function deleteGenre(err){
             if (err) {return next (err);}
             res.redirect('catalog/genre')
         })
-        }
-        });
+      }
+    });
 };
 
 // Display Genre update form on GET.

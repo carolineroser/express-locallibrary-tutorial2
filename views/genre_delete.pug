@@ -2,4 +2,19 @@ extends layout
 
 block content
   h1 #{title}
-    
+  if book_genre.length
+    p #[strong Delete the bollowing books before deleating the genre.]
+    div(style='margin-left:20px;margin-top:20px')
+      h4 Books
+      dl
+      each book in genre_books
+        dt
+          a(href=book.url) #{book.title}
+        dd #{book.summary}
+
+  else
+    p Are you sure you want to delete the genre?
+    form(method='POST' action='')
+      .form-group
+        input#genreid.form-control(type='hidden',name='genreid', required='true', value=genre._id )
+      button.btn.btn-primary(type='submit') Delete
