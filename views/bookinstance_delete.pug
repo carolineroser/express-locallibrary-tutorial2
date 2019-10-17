@@ -18,3 +18,9 @@ block content
       
   if bookinstance.status!='Available'
     p #[strong Due back:] #{bookinstance.due_back_formatted}
+  
+  p Are you sure you want to delete the book?
+    form(method='POST' action='')
+      .for.-group
+        input#bookid.form-control(type='hidden',name='bookinstanceid', required='true', value=bookinstance._id )
+      button.btn.btn-primary(type='submit') Delete

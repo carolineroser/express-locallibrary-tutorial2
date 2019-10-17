@@ -2,5 +2,19 @@ extends layout
 
 block content
   h1 Title: #{book.title}
+  if books_bookinstance.length
+    p #[strong delete the following book instance before deleating the book.]
+    div(style='margin-left:20px;margin-top:20px')
+      h4 Book Instances
+      dl
+      each bookinstance in books_bookinstance
+        dt
+          a(href=bookinstance.url) #{bookinstance.title}
+        dd #{book.summary}
 
-  
+  else
+    p Are you sure you want to delete the book?
+    form(method='POST' action='')
+      .for.-group
+        input#bookid.form-control(type='hidden',name='bookid', required='true', value=book._id )
+      button.btn.btn-primary(type='submit') Delete
