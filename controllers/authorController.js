@@ -146,26 +146,20 @@ exports.author_delete_post = function(req, res, next) {
 
 // Display Author update form on GET.
 exports.author_update_get = function(req, res) {
-    async.parallel({
-        author: function(callback){
-            Author.findById(req.params.id).populate('author').exec(callback);
-                },   
-    },function(err, results){
-        if (err) { return next(err);}
-        if (results.author==null){
-            var err = new Error('Author not found');
-            err.status = 404;
-            return next(err);
-    }
-    for (var all_g_iter = 0; all_g_iter < results.genres.length; all_g_iter++) {
-        for (var book_g_iter = 0; book_g_iter < results.book.genre.length; book_g_iter++) {
-            if (results.genres[all_g_iter]._id.toString()==results.book.genre[book_g_iter]._id.toString()) {
-                results.genres[all_g_iter].checked='true';
-            }
+    Author.findById(req.params.id)
+    .populate('author')
+    .exec(function (err, author) {
+      if (err) { return next(err); }
+      if (author==null) { // No results.
+          var err = new Error('Author not found');
+          err.status = 404;
+          return next(err);
         }
-    }
-});
-};
+      // Successful, so render.
+      res.render('author_form', { title: author});
+    })
+    };
+    
 
 // Handle Author update on POST.
 exports.author_update_post = [
@@ -186,13 +180,12 @@ exports.author_update_post = [
 
     // Process request after validation and sanitization.
     (req, res, next) => {
-
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
+            res.render('author_form', { title: 'Update Author', author: req.body, errors: errors.array() });
             return;
         }
         else {
@@ -207,9 +200,9 @@ exports.author_update_post = [
                     date_of_death: req.body.date_of_death,
                     _id:req.params.id
                 });
-            author.FindByIdAndUpdate(function (err) {
+            Author.findByIdAndUpdate(req.params.id, author, {}, function (err, theauthor) {
                 if (err) { return next(err); }
-                // Successful - redirect to new author record.
+                // Successful - redirect to updated author record.
                 res.redirect(author.url);
             });
         }

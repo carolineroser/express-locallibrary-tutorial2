@@ -1,3 +1,4 @@
+var async = require('async');
 var BookInstance = require('../models/bookinstance');
 var Book = require('../models/book');
 const { body,validationResult } = require('express-validator/check');
@@ -130,26 +131,20 @@ exports.bookinstance_delete_post = function(req, res, next) {
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = function(req, res) {
-  async.parallel({
-    bookinstance: function(callback){
-        BookInstance.findById(req.params.id).populate('bookinstance').exec(callnack);
-            },   
-},function(err, results){
-    if (err) { return next(err);}
-    if (results.bookinstance==null){
-        var err = new Error('Book Instance not found');
-        err.status = 404;
-        return next(err);
-}
-for (var all_g_iter = 0; all_g_iter < results.genres.length; all_g_iter++) {
-    for (var book_g_iter = 0; book_g_iter < results.book.genre.length; book_g_iter++) {
-        if (results.genres[all_g_iter]._id.toString()==results.book.genre[book_g_iter]._id.toString()) {
-            results.genres[all_g_iter].checked='true';
-        }
+BookInstance.findById(req.params.id)
+.populate('book')
+.exec(function (err, bookinstance) {
+  if (err) { return next(err); }
+  if (bookinstance==null) { // No results.
+      var err = new Error('Book copy not found');
+      err.status = 404;
+      return next(err);
     }
-}
-});
+  // Successful, so render.
+  res.render('bookinstance_form', { title: 'Copy: '+bookinstance.book.title, bookinstance:  bookinstance});
+})
 };
+
 
 // Handle bookinstance update on POST.
 exports.bookinstance_update_post = [
@@ -199,3 +194,12 @@ exports.bookinstance_update_post = [
           }
       }
     ];
+
+
+
+
+
+
+
+
+    //trohard
