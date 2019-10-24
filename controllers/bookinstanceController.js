@@ -194,12 +194,3 @@ exports.bookinstance_update_post = [
           }
       }
     ];
-
-
-
-
-
-
-
-
-    //trohard
