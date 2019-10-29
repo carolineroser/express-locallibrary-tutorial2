@@ -156,7 +156,7 @@ exports.author_update_get = function(req, res) {
           return next(err);
         }
       // Successful, so render.
-      res.render('author_form', { title: author});
+      res.render('author_form', { title: 'author update', author: author});
     })
     };
     

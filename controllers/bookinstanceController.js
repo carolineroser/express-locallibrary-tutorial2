@@ -123,7 +123,7 @@ exports.bookinstance_delete_post = function(req, res, next) {
           return next(err);
         }
     });
-        BookInstance.findByIdAndRemove(req.body.bookinstanceid, function deleteBookInstance(err){
+        BookInstance.findByIdAndRemove(req.body.bookinstanceid, function deleteBookinstance(err){
             if(err) {return next (err);}
             res.redirect('/catalog/bookinstances')
         });
@@ -141,7 +141,7 @@ BookInstance.findById(req.params.id)
       return next(err);
     }
   // Successful, so render.
-  res.render('bookinstance_form', { title: 'Copy: '+bookinstance.book.title, bookinstance:  bookinstance});
+  res.render('bookinstance_form', { title: 'Copy: '+bookinstance.book.title, bookinstance:  bookinstance, book_list: [bookinstance.book]});
 })
 };
 
@@ -186,7 +186,7 @@ exports.bookinstance_update_post = [
           }
           else {
               // Data from form is valid.
-              bookinstance.findByIdAndUpdate(req.params.id, book, {}, function (err,thebookinstance) {
+              BookInstance.findByIdAndUpdate(req.params.id, bookinstance, {}, function (err,thebookinstance) {
                 if (err) { return next(err); }
                    // Successful - redirect to book detail page.
                    res.redirect(thebookinstance.url);

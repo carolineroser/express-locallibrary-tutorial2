@@ -186,6 +186,7 @@ exports.book_delete_post = function(req, res, next) {
         },
         books_bookinstance: function(callback){
             BookInstance.find({'book': req.body.bookid}).exec(callback)
+        }
         },
         function(err,results){
            // console.log(results.books_bookinstance);
@@ -197,13 +198,12 @@ exports.book_delete_post = function(req, res, next) {
             }
             else {
                 Book.findByIdAndRemove(req.body.bookid, function deleteBook(err){
-
                     if(err) {return next (err);}
-                    res.redirect('/catalog/book')
+                    res.redirect('/catalog/books')
                 })
             }
         }
-    });
+    );
 };
 
 // Display book update form on GET.
